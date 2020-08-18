@@ -62,7 +62,7 @@ public class SpringAppClient extends AbstractSpringClient {
                 : null;
         appResourceProperties.withPersistentDisk(persistentDisk);
         if (appResource == null) {
-            AppResourceInner tempAppResource = new AppResourceInner();
+            final AppResourceInner tempAppResource = new AppResourceInner();
             tempAppResource.withProperties(appResourceProperties);
             return springManager.apps().inner().createOrUpdate(resourceGroup, clusterName, appName,
                     tempAppResource);
