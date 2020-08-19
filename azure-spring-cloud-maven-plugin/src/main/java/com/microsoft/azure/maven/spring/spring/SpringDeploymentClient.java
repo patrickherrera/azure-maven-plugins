@@ -128,8 +128,7 @@ public class SpringDeploymentClient extends AbstractSpringClient {
     private DeploymentResourceInner updateDeployment(Deployment deploymentConfiguration, DeploymentResourceInner deployment,
                                                      ResourceUploadDefinitionInner resource) throws AzureExecutionException {
         final DeploymentSettings previousDeploymentSettings = deployment.properties().deploymentSettings();
-        final SkuInner sku = deployment.sku();
-        if (isResourceScaled(deploymentConfiguration, previousDeploymentSettings, sku)) {
+        if (isResourceScaled(deploymentConfiguration, deployment)) {
             Log.info("Scaling deployment...");
             scaleDeployment(deploymentConfiguration);
             Log.info("Scaling deployment done.");
@@ -182,11 +181,12 @@ public class SpringDeploymentClient extends AbstractSpringClient {
         }
     }
 
-    private static boolean isResourceScaled(Deployment deploymentConfiguration, DeploymentSettings deploymentSettings, SkuInner sku) {
+    private static boolean isResourceScaled(Deployment deploymentConfiguration, DeploymentResourceInner deployment) {
+        final DeploymentSettings deploymentSettings = deployment.properties().deploymentSettings();
         return !(Objects.equals(deploymentConfiguration.getCpu(), deploymentSettings.cpu()) &&
                 Objects.equals(deploymentConfiguration.getMemoryInGB(), deploymentSettings.memoryInGB()) &&
-                Objects.nonNull(sku) &&
-                Objects.equals(deploymentConfiguration.getInstanceCount(), sku.capacity()));
+                Objects.nonNull(deployment.sku()) &&
+                Objects.equals(deploymentConfiguration.getInstanceCount(), deployment.sku().capacity()));
     }
 
     private static boolean isStableDeploymentResourceProvisioningState(DeploymentResourceProvisioningState state) {
