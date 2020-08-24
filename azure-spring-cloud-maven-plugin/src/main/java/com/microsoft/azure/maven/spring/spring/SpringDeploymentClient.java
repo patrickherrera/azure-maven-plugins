@@ -32,6 +32,9 @@ import java.util.regex.Pattern;
 
 public class SpringDeploymentClient extends AbstractSpringClient {
 
+    private static final String DEFAULT_SKU_NAME = "S0";
+    private static final String DEFAULT_SKU_TIER = "Standard";
+
     private static final String RUNTIME_VERSION_PATTERN = "(J|j)ava((\\s)?|_)(8|11)$";
     private static final RuntimeVersion DEFAULT_RUNTIME_VERSION = RuntimeVersion.JAVA_8;
     private static final int SCALING_TIME_OUT = 60; // Use same timeout as service
@@ -99,7 +102,9 @@ public class SpringDeploymentClient extends AbstractSpringClient {
         final DeploymentResourceProperties deploymentProperties = new DeploymentResourceProperties();
 
         final SkuInner skuInner = new SkuInner();
-        skuInner.withCapacity(deploymentConfiguration.getInstanceCount());
+        skuInner.withName(DEFAULT_SKU_NAME)
+                .withTier(DEFAULT_SKU_TIER)
+                .withCapacity(deploymentConfiguration.getInstanceCount());
 
         final DeploymentSettings deploymentSettings = new DeploymentSettings();
         final RuntimeVersion runtimeVersion = getRuntimeVersion(deploymentConfiguration.getRuntimeVersion(), null);
@@ -153,7 +158,9 @@ public class SpringDeploymentClient extends AbstractSpringClient {
         final DeploymentResourceProperties deploymentProperties = new DeploymentResourceProperties();
 
         final SkuInner skuInner = new SkuInner();
-        skuInner.withCapacity(deploymentConfiguration.getInstanceCount());
+        skuInner.withName(DEFAULT_SKU_NAME)
+                .withTier(DEFAULT_SKU_TIER)
+                .withCapacity(deploymentConfiguration.getInstanceCount());
 
         final DeploymentSettings deploymentSettings = new DeploymentSettings();
         deploymentSettings.withCpu(deploymentConfiguration.getCpu())
